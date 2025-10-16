@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using InventorySys.Application.Auth.Commands.Login;
-using InventorySys.Application.Common.Exceptions;
 using InventorySys.Application.Common.Interfaces;
 using InventorySys.Application.Common.Models;
+using InventorySys.Application.Features.Auth.Commands.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,16 +25,5 @@ namespace InventorySys.Web.Controllers
             var response = await Mediator.Send(req);
             return Ok(response);
         }
-        // public async Task<ActionResult<AuthenticateResponse>> Login(AuthenticateRequest requestDto)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         throw new ValidationException()
-        //         return ValidationProblem(ModelState);
-        //     }
-            
-        //     var responseDto = await _identityService.LoginAsync(requestDto.Username, requestDto.Password);
-        //     return Ok(responseDto);
-        // }
     }
 }
