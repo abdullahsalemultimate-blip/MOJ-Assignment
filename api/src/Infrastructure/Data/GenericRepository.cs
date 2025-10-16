@@ -25,6 +25,16 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
     public virtual async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
 
+
+    public virtual async Task<List<TDestination>> GetAllAsync<TDestination>(
+        IConfigurationProvider configuration,
+        CancellationToken cancellationToken = default)
+        where TDestination : class
+    {
+        return await _dbSet.AsNoTracking().ProjectTo<TDestination>(configuration).ToListAsync(cancellationToken);
+        
+    }
+
     public virtual async Task<PaginatedList<T>> GetAllPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking().PaginatedListAsync(pageNumber, pageSize, cancellationToken);
 
@@ -38,8 +48,13 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
         var query = _dbSet.AsNoTracking().ProjectTo<TDestination>(configuration);
         return await PaginatedList<TDestination>.CreateAsync(query, pageNumber, pageSize, cancellationToken);
     }
+
     public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate, cancellationToken);
+
+    public virtual async Task<TDestination?> FirstOrDefaultAsync<TDestination>(Expression<Func<T, bool>> predicate,IConfigurationProvider configuration, CancellationToken cancellationToken = default)
+        => await _dbSet.AsNoTracking().Where(predicate).ProjectTo<TDestination>(configuration).FirstOrDefaultAsync(cancellationToken);
+
 
     public virtual async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
