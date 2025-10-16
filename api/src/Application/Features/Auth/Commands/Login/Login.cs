@@ -2,7 +2,7 @@
 using InventorySys.Application.Common.Models;
 using InventorySys.Domain.Constants;
 
-namespace InventorySys.Application.Auth.Commands.Login;
+namespace InventorySys.Application.Features.Auth.Commands.Login;
 
 public class LoginCommand : IRequest<AuthenticateResponse>
 {
