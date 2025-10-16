@@ -4,26 +4,25 @@ using InventorySys.Application.Features.Auth.Commands.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InventorySys.Web.Controllers
+namespace InventorySys.Web.Controllers;
+
+
+[AllowAnonymous]
+public class AuthController: ApiControllerBase
 {
+    private readonly IIdentityService _identityService;
 
-    [AllowAnonymous]
-    public class AuthController: ApiControllerBase
+    public AuthController(IIdentityService identityService)
     {
-        private readonly IIdentityService _identityService;
+        _identityService = identityService;
+    }
 
-        public AuthController(IIdentityService identityService)
-        {
-            _identityService = identityService;
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<AuthenticateResponse>> Login(LoginCommand req)
-        {
-            var response = await Mediator.Send(req);
-            return Ok(response);
-        }
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<AuthenticateResponse>> Login(LoginCommand req)
+    {
+        var response = await Mediator.Send(req);
+        return Ok(response);
     }
 }

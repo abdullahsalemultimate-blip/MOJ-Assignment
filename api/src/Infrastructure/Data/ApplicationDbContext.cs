@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using InventorySys.Application.Common.Interfaces;
 using InventorySys.Domain.Entities;
 using InventorySys.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventorySys.Infrastructure.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 

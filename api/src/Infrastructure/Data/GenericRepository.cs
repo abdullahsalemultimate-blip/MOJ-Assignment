@@ -46,7 +46,7 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
         where TDestination : class
     {
         var query = _dbSet.AsNoTracking().ProjectTo<TDestination>(configuration);
-        return await PaginatedList<TDestination>.CreateAsync(query, pageNumber, pageSize, cancellationToken);
+        return await MappingExtensions.CreatePaginatedListAsync(query, pageNumber, pageSize, cancellationToken);
     }
 
     public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
@@ -81,8 +81,16 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
 public static class MappingExtensions
 {
     public static Task<PaginatedList<TDestination>> PaginatedListAsync<TDestination>(this IQueryable<TDestination> queryable, int pageNumber, int pageSize, CancellationToken cancellationToken = default) where TDestination : class
-        => PaginatedList<TDestination>.CreateAsync(queryable.AsNoTracking(), pageNumber, pageSize, cancellationToken);
+        => CreatePaginatedListAsync(queryable.AsNoTracking(), pageNumber, pageSize, cancellationToken);
 
     public static Task<List<TDestination>> ProjectToListAsync<TDestination>(this IQueryable queryable, IConfigurationProvider configuration, CancellationToken cancellationToken = default) where TDestination : class
         => queryable.ProjectTo<TDestination>(configuration).AsNoTracking().ToListAsync(cancellationToken);
+
+    public static async Task<PaginatedList<T>> CreatePaginatedListAsync<T>(IQueryable<T> source, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var count = await source.CountAsync(cancellationToken);
+        var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        return new PaginatedList<T>(items, count, pageNumber, pageSize);
+    }
 }
