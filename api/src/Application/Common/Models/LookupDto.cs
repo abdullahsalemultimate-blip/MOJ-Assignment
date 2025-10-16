@@ -12,7 +12,8 @@ public class LookupDto
     {
         public Mapping()
         {
-            CreateMap<Supplier, LookupDto>();
+            CreateMap<Supplier, LookupDto>()
+                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.Name));
         }
     }
 }
