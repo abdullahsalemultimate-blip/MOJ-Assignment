@@ -1,5 +1,6 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Application.Features.AuditTrailEntries;
+using InventorySys.Application.Features.Products;
 using InventorySys.Domain.Constants;
 using InventorySys.Infrastructure.Cache;
 using InventorySys.Infrastructure.Data;
@@ -36,6 +37,7 @@ public static class DependencyInjection
 
         builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped<IAuditTrailRepository, AuditTrailRepository>();
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 

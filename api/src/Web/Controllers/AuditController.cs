@@ -1,6 +1,4 @@
-using InventorySys.Application.Common.Models;
 using InventorySys.Application.Features.AuditTrailEntries.Queries.GetEntityHistory;
-using InventorySys.Application.Features.Auth.Commands.Login;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventorySys.Web.Controllers;

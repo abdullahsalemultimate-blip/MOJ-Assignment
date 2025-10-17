@@ -19,7 +19,7 @@ public class SuppliersController: ApiControllerBase
     public async Task<ActionResult<SupplierDto?>> GetById(int id)
     {
         var supplier = await Mediator.Send(new GetSupplierByIdQuery(id));
-        return supplier is null ? NotFound() : Ok(supplier);
+        return Ok(supplier);
     }
 
     [HttpPost]

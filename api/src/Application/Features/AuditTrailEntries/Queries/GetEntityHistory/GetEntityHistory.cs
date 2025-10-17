@@ -17,10 +17,10 @@ public class GetEntityHistoryQueryHandler : IRequestHandler<GetEntityHistoryQuer
     public async Task<List<AuditEntryDto>> Handle(GetEntityHistoryQuery request, CancellationToken cancellationToken)
     {
 
-        var auditEntries = await _repository.GetHistoryByEntityIdAsync(request.EntityName, request.EntityName);
+        var auditEntries = await _repository.GetHistoryByEntityIdAsync(request.EntityName, request.EntityId);
 
         var history = auditEntries
-            .Select(entry => MapToDto(entry))
+            .Select(MapToDto)
             .ToList();
 
         return history;

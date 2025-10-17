@@ -29,10 +29,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasMaxLength(DomainConsts.NameDefaultMaxLength)
             .IsRequired();
 
-        builder.HasOne<Supplier>()
+        builder.HasOne(x=> x.Supplier)
             .WithMany()
             .HasForeignKey(p => p.SupplierId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
 
         builder.Property<byte[]>("RowVersion")
             .IsRowVersion()

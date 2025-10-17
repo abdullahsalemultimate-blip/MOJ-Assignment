@@ -1,6 +1,10 @@
 using InventorySys.Infrastructure.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 builder.AddApplicationServices();
@@ -30,6 +34,7 @@ app.UseSwaggerUi(settings =>
     settings.DocumentPath = "/api/specification.json";
 });
 
+app.UseMiddleware<TraceIdLoggingMiddleware>();
 
 app.UseExceptionHandler(options => { });
 

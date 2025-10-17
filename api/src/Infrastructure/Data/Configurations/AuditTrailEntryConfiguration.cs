@@ -8,6 +8,12 @@ namespace InventorySys.Infrastructure.Data.Configurations;
 
 public class AuditTrailEntryConfiguration : IEntityTypeConfiguration<AuditTrailEntry>
 {
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        ReferenceHandler = null,
+        WriteIndented = false,
+    };
+    
     public void Configure(EntityTypeBuilder<AuditTrailEntry> builder)
     {
         builder.ToTable("audit_trails");
@@ -25,8 +31,8 @@ public class AuditTrailEntryConfiguration : IEntityTypeConfiguration<AuditTrailE
         builder.Property(e => e.OldValues)
             .HasConversion(
                 new ValueConverter<Dictionary<string, object?>, string>(
-                    v => JsonSerializer.Serialize(v, new JsonSerializerOptions { ReferenceHandler = null, MaxDepth = 1, WriteIndented = false }),
-                    v => JsonSerializer.Deserialize<Dictionary<string, object?>>(v, new JsonSerializerOptions { ReferenceHandler = null, MaxDepth = 1, WriteIndented = false }) ?? new Dictionary<string, object?>()
+                    v => JsonSerializer.Serialize(v, _jsonOptions),
+                    v => JsonSerializer.Deserialize<Dictionary<string, object?>>(v, _jsonOptions) ?? new Dictionary<string, object?>()
                 )
             )
             .HasColumnType("nvarchar(max)"); // Ensure the column type is large enough
@@ -34,8 +40,8 @@ public class AuditTrailEntryConfiguration : IEntityTypeConfiguration<AuditTrailE
         builder.Property(e => e.NewValues)
             .HasConversion(
                 new ValueConverter<Dictionary<string, object?>, string>(
-                    v => JsonSerializer.Serialize(v, new JsonSerializerOptions { ReferenceHandler = null, MaxDepth = 1, WriteIndented = false }),
-                    v => JsonSerializer.Deserialize<Dictionary<string, object?>>(v, new JsonSerializerOptions { ReferenceHandler = null, MaxDepth = 1, WriteIndented = false }) ?? new Dictionary<string, object?>()
+                    v => JsonSerializer.Serialize(v, _jsonOptions),
+                    v => JsonSerializer.Deserialize<Dictionary<string, object?>>(v, _jsonOptions) ?? new Dictionary<string, object?>()
                 )
             )
             .HasColumnType("nvarchar(max)");
@@ -44,8 +50,8 @@ public class AuditTrailEntryConfiguration : IEntityTypeConfiguration<AuditTrailE
         builder.Property(e => e.ChangedColumns)
             .HasConversion(
                 new ValueConverter<List<string>, string>(
-                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>()
+                    v => JsonSerializer.Serialize(v, _jsonOptions),
+                    v => JsonSerializer.Deserialize<List<string>>(v, _jsonOptions) ?? new List<string>()
                 )
             )
             .HasColumnType("nvarchar(max)");

@@ -30,7 +30,8 @@ public class CustomExceptionHandler : IExceptionHandler
             return true;
         }
 
-        return false;
+        await HandleUnknownException(httpContext, exception);
+        return true;
     }
 
     private async Task HandleValidationException(HttpContext httpContext, Exception ex)
@@ -79,12 +80,31 @@ public class CustomExceptionHandler : IExceptionHandler
 
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+        var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status400BadRequest,
             Title = "Business Rule Violation",
             Detail = exception.Message,
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-        });
+        };
+
+        problemDetails.Extensions.Add("traceId", httpContext.GetTraceId());
+        await httpContext.Response.WriteAsJsonAsync(problemDetails);
+    }
+
+     private async Task HandleUnknownException(HttpContext httpContext, Exception ex)
+    {
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        var problemDetails = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Internal Server Error",
+            Detail = "An unexpected and critical error occurred while processing your request. The development team has been notified.",
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+        };
+        
+        problemDetails.Extensions.Add("traceId", httpContext.GetTraceId());
+
+        await httpContext.Response.WriteAsJsonAsync(problemDetails);
     }
 }

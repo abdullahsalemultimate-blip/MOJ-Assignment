@@ -14,8 +14,8 @@ public class AuditTrailRepository : IAuditTrailRepository
     }
 
     public async Task<List<AuditTrailEntry>> GetHistoryByEntityIdAsync(
-        string entityName, 
-        string entityId, 
+        string entityName,
+        string entityId,
         CancellationToken cancellationToken = default)
     {
         return await _context.AuditTrailEntries

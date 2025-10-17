@@ -11,6 +11,8 @@ public class Product : BaseAuditableEntity, IAggregateRoot, IFullAuditTrailEntit
     public ItemQuantity ReorderLevel { get; private set; }
     public decimal UnitPrice { get; private set; }
     public int SupplierId { get; private set; }
+    
+    public Supplier Supplier { get; private set; }
 
 
     #pragma warning disable CS8618 //  Required By EfCore DBContxt

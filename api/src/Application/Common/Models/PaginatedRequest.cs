@@ -1,6 +1,6 @@
 namespace InventorySys.Application.Common.Models;
 
-public abstract class PaginatedRequest
+public record PaginatedRequest<T>: IRequest<PaginatedList<T>> where T: class
 {
     private const int MaxPageSize = 1000;
     private int _pageSize = 10;
