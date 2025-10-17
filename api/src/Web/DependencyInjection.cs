@@ -8,6 +8,9 @@ using NSwag.Generation.Processors.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using InventorySys.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
+using InventorySys.Domain.Constants;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -40,7 +43,16 @@ public static class DependencyInjection
                 });
         });
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            // Fallback Policy for every controller and actions(only Admins are Allowed) .
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireRole(Roles.Administrator)
+                .Build();
+
+            options.Filters.Add(new AuthorizeFilter(policy));
+        });
 
         builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -54,6 +66,15 @@ public static class DependencyInjection
         builder.Services.AddOpenApiDocument((configure, sp) =>
         {
             configure.Title = "InventorySys API";
+            configure.Description = @"Default Admin User Credintials 
+                UserName : administrator@localhost
+                Password : Administrator1!
+
+                token for test: 
+    
+                Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0YzNlODk3NS0wYjhjLTQ3ZTMtODE4NS01ZWE3ZmU5MGFhNTgiLCJzdWIiOiI0YzNlODk3NS0wYjhjLTQ3ZTMtODE4NS01ZWE3ZmU5MGFhNTgiLCJ1bmlxdWVfbmFtZSI6ImFkbWluaXN0cmF0b3JAbG9jYWxob3N0IiwianRpIjoiN2RjZTdhNDUtODdjMC00YzhjLWFmNDQtNDI4M2NkZGUzMDM4Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NjA2NjYwNjksImV4cCI6MzkyMDY2NjA2OSwiaWF0IjoxNzYwNjY2MDY5LCJpc3MiOiJJbnZlbnRvcnlTeXMiLCJhdWQiOiJJbnZlbnRvcnlTeXMifQ.IB0TF1PUFBcAIsMVfmXj9w9NB1fFU1Ksv9JdOihN9eY
+
+            ";
 
             configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
             {

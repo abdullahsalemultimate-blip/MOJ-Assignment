@@ -13,16 +13,23 @@ public class GetSuppliersLookupQueryHandler : IRequestHandler<GetSuppliersLookup
 {
     private readonly IRepository<Supplier> _repository;
     private readonly IMapper _mapper;
+    private readonly ICacheService _cacheService;
 
-    public GetSuppliersLookupQueryHandler(IRepository<Supplier> repository, IMapper mapper)
+    public GetSuppliersLookupQueryHandler(IRepository<Supplier> repository, IMapper mapper, ICacheService cacheService)
     {
         _repository = repository;
         _mapper = mapper;
+        _cacheService = cacheService;
     }
 
 
     public async Task<List<LookupDto>> Handle(GetSuppliersLookupQuery request, CancellationToken cancellationToken)
     {
-        return await _repository.GetAllAsync<LookupDto>(_mapper.ConfigurationProvider, cancellationToken);
+        
+        return await _cacheService.GetOrCreateAsync(CacheKey.SuppliersLookup, async () =>
+        {
+            return await _repository.GetAllAsync<LookupDto>(_mapper.ConfigurationProvider, cancellationToken);
+        });
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Domain.Entities;
+using InventorySys.Domain.Events;
 
 namespace InventorySys.Application.Features.Suppliers.Commands.UpdateSupplier;
 
@@ -25,6 +26,8 @@ public class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplierComman
         Guard.Against.NotFound(request.Id, supplier);
 
         supplier.Update(request.Name);
+        supplier.AddDomainEvent(new SupplierModifiedEvent(supplier));
+        
         await _repository.SaveChangesAsync(cancellationToken);
     }
 }

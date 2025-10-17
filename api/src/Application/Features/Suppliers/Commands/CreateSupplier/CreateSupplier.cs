@@ -1,5 +1,6 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Domain.Entities;
+using InventorySys.Domain.Events;
 
 namespace InventorySys.Application.Features.Suppliers.Commands.CreateSupplier;
 
@@ -12,7 +13,7 @@ public class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierComman
 {
     private readonly IRepository<Supplier> _repository;
 
-    public CreateSupplierCommandHandler(IRepository<Supplier> repository)
+    public CreateSupplierCommandHandler(IRepository<Supplier> repository )
     {
         _repository = repository;
     }
@@ -20,7 +21,10 @@ public class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierComman
     public async Task<int> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
     {
         Supplier supplier = new(request.Name);
+        
         _repository.Add(supplier);
+        supplier.AddDomainEvent(new SupplierModifiedEvent(supplier));
+        
         await _repository.SaveChangesAsync(cancellationToken);
         return supplier.Id;
     }

@@ -15,6 +15,6 @@ public class JwtOptions
     [Required]
     public string Audience { get; set; } = null!;
 
-    [Range(1,43800)] // 43800 Eqal 1 month
+    [Range(1,43800000)] // 43800 Eqal 1 month
     public int ExpireMinutes { get; set; }
 }

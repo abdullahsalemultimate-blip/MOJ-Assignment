@@ -13,17 +13,18 @@ public class Supplier: BaseAuditableEntity, IAggregateRoot, ISoftDeletable
 
     public Supplier(string name)
     {
-        SetName(name);
+        Name = name;
+    }
+
+    public static Supplier Create(string name)
+    {
+        Guard.Against.NullOrWhiteSpace(name, nameof(name));
+        return new(name);
     }
 
     public void Update(string name)
     {
-        SetName(name);
-    }
-    
-    private void SetName(string name)
-    {
-        Guard.Against.NullOrEmpty(name, nameof(name));
+        Guard.Against.NullOrWhiteSpace(name, nameof(name));
         Name = name;
     }
 }

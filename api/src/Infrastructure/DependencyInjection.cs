@@ -1,5 +1,6 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Domain.Constants;
+using InventorySys.Infrastructure.Cache;
 using InventorySys.Infrastructure.Data;
 using InventorySys.Infrastructure.Data.Interceptors;
 using InventorySys.Infrastructure.Identity;
@@ -72,6 +73,10 @@ public static class DependencyInjection
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddTransient<IIdentityService, IdentityService>();
         builder.Services.AddTransient<ITokenService, TokenService>();
+
+        // Add Cache
+        builder.Services.AddMemoryCache();
+        builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
 
         builder.Services.AddAuthorization();
     }

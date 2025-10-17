@@ -1,5 +1,6 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Domain.Entities;
+using InventorySys.Domain.Events;
 
 namespace InventorySys.Application.Features.Suppliers.Commands.DeleteSupplier;
 
@@ -23,6 +24,8 @@ public class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplierComman
         Guard.Against.NotFound(request.Id, supplier);
 
         _repository.Remove(supplier);
+        supplier.AddDomainEvent(new SupplierModifiedEvent(supplier));
+        
         await _repository.SaveChangesAsync(cancellationToken);
     }
 }
