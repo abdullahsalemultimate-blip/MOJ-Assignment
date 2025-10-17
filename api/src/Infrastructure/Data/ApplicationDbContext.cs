@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using EntityFramework.Exceptions.SqlServer;
 using InventorySys.Domain.Entities;
 using InventorySys.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -25,11 +26,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .Properties<decimal>()
             .HavePrecision(18, 2);
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseExceptionProcessor();
+    }
 }

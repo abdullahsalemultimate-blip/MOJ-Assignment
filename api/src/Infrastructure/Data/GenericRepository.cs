@@ -1,9 +1,11 @@
 using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EntityFramework.Exceptions.Common;
 using InventorySys.Application.Common.Interfaces;
 using InventorySys.Application.Common.Models;
 using InventorySys.Domain.Common;
+using InventorySys.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventorySys.Infrastructure.Data;
@@ -59,6 +61,9 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
     public virtual async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
 
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        => _dbSet.AnyAsync(predicate, cancellationToken);
+
     public virtual void Add(T entity)
         => _dbSet.Add(entity);
 
@@ -75,7 +80,38 @@ public class GenericRepository<T> : IRepository<T> where T : class, IAggregateRo
         => _dbSet.Remove(entity);
 
     public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        => await _context.SaveChangesAsync(cancellationToken);
+    {
+        try
+        {
+           return await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (UniqueConstraintException ex)
+        {
+            var property = ex.ConstraintProperties?.FirstOrDefault() ?? "unknown field";
+            var table = ex.SchemaQualifiedTableName ?? typeof(T).Name;
+            var constraint = ex.ConstraintName ?? "unique constraint";
+            var duplicatValue = ex.ConstraintProperties?[0] ?? string.Empty;
+
+            // This is full Desceibtive message  Just for Assignement Scope
+            var message =
+                $"A duplicate value was found for {property} in table '{table}' (violated {constraint}). Duplicate value for {duplicatValue} ";
+
+            throw new BusinessRuleValidationException(message, ex);
+        }
+        catch (ReferenceConstraintException ex)
+        {
+            var table = ex.SchemaQualifiedTableName ?? typeof(T).Name;
+            var constraint = ex.ConstraintName ?? "foreign key constraint";
+
+            // This is full Descriptive message  Just for Assignement Scope
+            var message =
+                $"Invalid reference detected while saving '{table}'. " +
+                $"This usually means the related entity does not exist (violated {constraint}).";
+
+            throw new BusinessRuleValidationException(message, ex);
+        }
+
+    }
 }
 
 public static class MappingExtensions
