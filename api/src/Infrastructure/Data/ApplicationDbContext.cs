@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using EntityFramework.Exceptions.SqlServer;
 using InventorySys.Domain.Entities;
+using InventorySys.Infrastructure.AuditTrail;
 using InventorySys.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Supplier> Suppliers => Set<Supplier>();
 
     public DbSet<Product> Products => Set<Product>();
-
+    
+    public DbSet<AuditTrailEntry> AuditTrailEntries => Set<AuditTrailEntry>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 
 namespace InventorySys.Domain.Entities;
 
-public class Product : BaseAuditableEntity, IAggregateRoot
+public class Product : BaseAuditableEntity, IAggregateRoot, IFullAuditTrailEntity
 {
     public string Name { get; private set; }
     public QuantityUnit QuantityPerUnit { get; private set; }

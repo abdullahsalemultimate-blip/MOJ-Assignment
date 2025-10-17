@@ -1,8 +1,10 @@
 ﻿using InventorySys.Application.Common.Interfaces;
+using InventorySys.Application.Features.AuditTrailEntries;
 using InventorySys.Domain.Constants;
 using InventorySys.Infrastructure.Cache;
 using InventorySys.Infrastructure.Data;
 using InventorySys.Infrastructure.Data.Interceptors;
+using InventorySys.Infrastructure.Data.Repositories;
 using InventorySys.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,7 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        builder.Services.AddScoped<ISaveChangesInterceptor, FullAuditTrailInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
@@ -32,6 +35,7 @@ public static class DependencyInjection
 
 
         builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+        builder.Services.AddScoped<IAuditTrailRepository, AuditTrailRepository>();
 
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
