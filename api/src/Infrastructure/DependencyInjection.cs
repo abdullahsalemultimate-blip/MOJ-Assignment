@@ -1,6 +1,7 @@
 ﻿using InventorySys.Application.Common.Interfaces;
 using InventorySys.Application.Features.AuditTrailEntries;
 using InventorySys.Application.Features.Products;
+using InventorySys.Application.Features.Statistics;
 using InventorySys.Domain.Constants;
 using InventorySys.Infrastructure.Cache;
 using InventorySys.Infrastructure.Data;
@@ -10,7 +11,6 @@ using InventorySys.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -19,28 +19,8 @@ public static class DependencyInjection
 {
     public static void AddInfrastructureServices(this IHostApplicationBuilder builder)
     {
-        var connectionString = builder.Configuration.GetConnectionString("InventorySysDb");
-        Guard.Against.Null(connectionString, message: "Connection string 'InventorySysDb' not found.");
-
-        builder.Services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
-        builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-        builder.Services.AddScoped<ISaveChangesInterceptor, FullAuditTrailInterceptor>();
-        builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-
-        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
-        {
-            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
-            options.UseSqlServer(connectionString);
-            options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
-        });
-
-
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-        builder.Services.AddScoped<IAuditTrailRepository, AuditTrailRepository>();
-        builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
-        builder.Services.AddScoped<ApplicationDbContextInitialiser>();
-
+        builder.AddDatabaseServices();
+        
         builder.Services.AddAuthentication()
             .AddBearerToken(IdentityConstants.BearerScheme);
 
@@ -50,7 +30,7 @@ public static class DependencyInjection
             .AddOptions<JwtOptions>()
             .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
             .ValidateDataAnnotations()
-            .ValidateOnStart(); 
+            .ValidateOnStart();
 
         builder.Services
             .AddIdentityCore<ApplicationUser>(options =>
@@ -69,7 +49,7 @@ public static class DependencyInjection
                 options.User.RequireUniqueEmail = IdentityConsts.UserRequireUniqueEmail;
 
                 options.SignIn.RequireConfirmedEmail = IdentityConsts.SignInRequireConfirmedEmail;
-                
+
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -85,5 +65,33 @@ public static class DependencyInjection
         builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
 
         builder.Services.AddAuthorization();
+    }
+
+    private static void AddDatabaseServices(this IHostApplicationBuilder builder)
+    {
+        var connectionString = builder.Configuration.GetApplicationDatabaseConnectionString();
+
+        builder.Services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
+        builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        builder.Services.AddScoped<ISaveChangesInterceptor, FullAuditTrailInterceptor>();
+        builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+
+        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        {
+            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+            options.UseSqlServer(connectionString);
+            options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+        });
+
+
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+        builder.Services.AddScoped<IAuditTrailRepository, AuditTrailRepository>();
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+
+        builder.Services.AddScoped<ApplicationDbContextInitialiser>();
+
+        builder.Services.AddScoped<IDapperDbContext, DapperDbContext>();
+
     }
 }
