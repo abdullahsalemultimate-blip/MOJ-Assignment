@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "InventorySys API",
-    "description": "Default user\n                    UserName = 'administrator@localhost'\n                    Password  = 'Administrator1!'\n                    \n                    long lived Token For Testing = 'Bearer ' ",
+    "description": "Default Admin User Credintials \n                UserName : administrator@localhost\n                Password : Administrator1!\n\n                token for test: \n    \n                Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0YzNlODk3NS0wYjhjLTQ3ZTMtODE4NS01ZWE3ZmU5MGFhNTgiLCJzdWIiOiI0YzNlODk3NS0wYjhjLTQ3ZTMtODE4NS01ZWE3ZmU5MGFhNTgiLCJ1bmlxdWVfbmFtZSI6ImFkbWluaXN0cmF0b3JAbG9jYWxob3N0IiwianRpIjoiN2RjZTdhNDUtODdjMC00YzhjLWFmNDQtNDI4M2NkZGUzMDM4Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NjA2NjYwNjksImV4cCI6MzkyMDY2NjA2OSwiaWF0IjoxNzYwNjY2MDY5LCJpc3MiOiJJbnZlbnRvcnlTeXMiLCJhdWQiOiJJbnZlbnRvcnlTeXMifQ.IB0TF1PUFBcAIsMVfmXj9w9NB1fFU1Ksv9JdOihN9eY\n\n            ",
     "version": "1.0.0"
   },
   "paths": {

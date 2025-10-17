@@ -20,5 +20,11 @@ public  readonly record struct ItemQuantity
        return new (value);
     }
 
-    public ItemQuantity Update(int amount) =>  Create(amount);
+    public ItemQuantity Add(int amount) => Create(checked(amount + Value)); // jUST Double Cjecks to make sure there is no overflows.
+    public ItemQuantity Substract(int amount) => Create(checked(Value - amount)); // jUST Double Cjecks to make sure there is no overflows.
+
+    public static implicit operator int(ItemQuantity quantity) => quantity.Value;
+    public static implicit operator ItemQuantity(int value) => Create(value);
+
+    public override string ToString() => Value.ToString();
 }

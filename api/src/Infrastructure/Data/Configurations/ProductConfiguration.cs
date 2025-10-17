@@ -30,7 +30,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.HasOne<Supplier>()
-        .WithMany()
-        .HasForeignKey(p => p.SupplierId);
+            .WithMany()
+            .HasForeignKey(p => p.SupplierId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property<byte[]>("RowVersion")
+            .IsRowVersion()
+            .IsConcurrencyToken();
+
+        builder.HasIndex(p => p.Name);
     }
 }
