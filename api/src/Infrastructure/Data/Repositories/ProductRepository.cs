@@ -22,11 +22,11 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var query = _dbSet
-            .Include(p => p.Supplier)
-            .IgnoreQueryFilters()
-            .AsNoTracking()
-            .AsQueryable();
+        var query = from p in _context.Products join s in _context.Suppliers.IgnoreQueryFilters()
+            on p.SupplierId equals s.Id
+            where p.UnitsInStock.Value <= p.ReorderLevel.Value
+            select p;
+
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
