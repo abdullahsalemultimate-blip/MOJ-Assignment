@@ -180,12 +180,14 @@
         },
         "responses": {
           "200": {
+            "description": ""
+          },
+          "400": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -215,10 +217,29 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProductDetailVm"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -255,13 +276,25 @@
           "x-position": 2
         },
         "responses": {
-          "200": {
+          "204": {
+            "description": ""
+          },
+          "400": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -286,13 +319,25 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
+            "description": ""
+          },
+          "400": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -310,10 +355,12 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReorderProductDto"
+                  }
                 }
               }
             }
@@ -331,10 +378,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/LargestSupplierDto"
                 }
               }
             }
@@ -352,10 +398,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/MinimumOrderProductDto"
                 }
               }
             }
@@ -403,13 +448,12 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "400": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -436,12 +480,12 @@
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SupplierDto"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -478,13 +522,25 @@
           "x-position": 2
         },
         "responses": {
-          "200": {
+          "204": {
+            "description": ""
+          },
+          "400": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -509,13 +565,25 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
+            "description": ""
+          },
+          "400": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -656,6 +724,100 @@
           }
         }
       },
+      "ProductDetailVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "quantityUnits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LookupDto"
+            }
+          },
+          "productDetail": {
+            "$ref": "#/components/schemas/ProductDetailDto"
+          }
+        }
+      },
+      "LookupDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProductDetailDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantityPerUnit": {
+            "$ref": "#/components/schemas/QuantityUnit"
+          },
+          "unitsInStock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitsOnOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reorderLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "QuantityUnit": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Kilo",
+          "Box",
+          "Can",
+          "Liter",
+          "Bottle"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
       "CreateProductCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -687,26 +849,6 @@
             "format": "int32"
           }
         }
-      },
-      "QuantityUnit": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "None",
-          "Kilo",
-          "Box",
-          "Can",
-          "Liter",
-          "Bottle"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
       },
       "UpdateProductCommand": {
         "type": "object",
@@ -741,6 +883,67 @@
           "reorderLevel": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "ReorderProductDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unitsInStock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reorderLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierName": {
+            "type": "string"
+          }
+        }
+      },
+      "LargestSupplierDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierName": {
+            "type": "string"
+          },
+          "totalProducts": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "MinimumOrderProductDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unitsOnOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierName": {
+            "type": "string"
           }
         }
       },

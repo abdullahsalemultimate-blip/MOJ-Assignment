@@ -16,6 +16,7 @@ public class SuppliersController: ApiControllerBase
         => Ok(await Mediator.Send(new GetAllSuppliersQuery()));
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<SupplierDto?>> GetById(int id)
     {
         var supplier = await Mediator.Send(new GetSupplierByIdQuery(id));
@@ -23,10 +24,14 @@ public class SuppliersController: ApiControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<int>> Create(CreateSupplierCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateSupplierCommand command)
     {
         if (id != command.Id)
@@ -37,6 +42,9 @@ public class SuppliersController: ApiControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
         await Mediator.Send(new DeleteSupplierCommand(id));

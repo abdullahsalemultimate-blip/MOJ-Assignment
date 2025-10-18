@@ -9,23 +9,23 @@ namespace InventorySys.Web.Controllers;
 public class StatisticsController : ApiControllerBase
 {
     [HttpGet("reorder-needed")]
-    public async Task<IActionResult> GetReorderNeeded()
+    public async Task<ActionResult<IEnumerable<ReorderProductDto>>> GetReorderNeeded()
     {
         var result = await Mediator.Send(new GetProductsNeedingReorderQuery());
         return Ok(result);
     }
 
     [HttpGet("largest-supplier")]
-    public async Task<IActionResult> GetLargestSupplier()
+    public async Task<ActionResult<LargestSupplierDto?>> GetLargestSupplier()
     {
-        var result = await Mediator.Send(new GetLargestSupplierQuery());
+        LargestSupplierDto? result = await Mediator.Send(new GetLargestSupplierQuery());
         return Ok(result);
     }
 
     [HttpGet("minimum-orders-product")]
-    public async Task<IActionResult> GetMinimumOrdersProduct()
+    public async Task<ActionResult<MinimumOrderProductDto?>> GetMinimumOrdersProduct()
     {
-        var result = await Mediator.Send(new GetProductWithMinimumOrdersQuery());
+        MinimumOrderProductDto? result = await Mediator.Send(new GetProductWithMinimumOrdersQuery());
         return Ok(result);
     }
 }
