@@ -1,3 +1,4 @@
+using InventorySys.Application.Common.Models;
 using InventorySys.Application.Features.Products.Commands.AdjustStockQuantity;
 using InventorySys.Application.Features.Products.Commands.CreateProduct;
 using InventorySys.Application.Features.Products.Commands.DeleteProduct;
@@ -12,7 +13,7 @@ namespace InventorySys.Web.Controllers;
 public class ProductsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetProductsQuery request)
+    public async Task<ActionResult<PaginatedList<ProductDto>>> GetAll([FromQuery] GetProductsQuery request)
     {
         var products = await Mediator.Send(request);
         return Ok(products);
