@@ -38,6 +38,8 @@ app.UseMiddleware<TraceIdLoggingMiddleware>();
 
 app.UseExceptionHandler(options => { });
 
+app.UseCors();
+
 app.Map("/", () => Results.Redirect("/api"));
 
 app.MapControllers();
