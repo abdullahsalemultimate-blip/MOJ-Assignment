@@ -345,6 +345,63 @@
         }
       }
     },
+    "/api/Products/{id}/adjust-stock-quantity": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Products_Update2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustStockQuantityCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Statistics/reorder-needed": {
       "get": {
         "tags": [
@@ -885,6 +942,37 @@
             "format": "int32"
           }
         }
+      },
+      "AdjustStockQuantityCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adjustmentDirection": {
+            "$ref": "#/components/schemas/AdjustQuantityDirection"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AdjustQuantityDirection": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Increasing",
+          "Decreasing"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
       },
       "ReorderProductDto": {
         "type": "object",
