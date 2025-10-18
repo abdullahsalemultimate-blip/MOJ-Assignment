@@ -64,12 +64,14 @@ public class CustomExceptionHandler : IExceptionHandler
 
     private async Task HandleUnauthorizedAccessException(HttpContext httpContext, Exception ex)
     {
+        var exception = (UnauthorizedAccessException)ex;
         httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
             Status = StatusCodes.Status401Unauthorized,
             Title = "Unauthorized",
+            Detail = exception.Message ?? "Unauthorized Access",
             Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
         });
     }
