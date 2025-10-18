@@ -4,7 +4,7 @@ This project is an implementation of a **MOJ assignment**, created to demonstrat
 
 
 > [!WARNING]
-> This documentation has been generated with the help of AI to save time and ensure clarity. All (key technical highlights, features, tools, and setup instructions) were passed to AI to create an easy-to-read, descriptive, and elegant guide. This approach allows us to focus on building the project while the AI handles the documentation.
+> This documentation has been generated with the help of AI to save time and ensure clarity. All (key technical highlights, features, tools, and setup instructions) were passed to AI to create an easy-to-read, descriptive, and elegant guide.
 
 # 🧾 InventorySys – Backend (.NET 9 + EF Core 9)
 
