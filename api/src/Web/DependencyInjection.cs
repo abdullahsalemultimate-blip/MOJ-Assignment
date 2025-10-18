@@ -45,7 +45,6 @@ public static class DependencyInjection
 
         builder.Services.AddControllers(options =>
         {
-            // Fallback Policy for every controller and actions(only Admins are Allowed) .
             var policy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .RequireRole(Roles.Administrator)
