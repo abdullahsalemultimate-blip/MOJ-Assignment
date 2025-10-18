@@ -1,3 +1,4 @@
+using InventorySys.Application.Features.Products.Commands.AdjustStockQuantity;
 using InventorySys.Application.Features.Products.Commands.CreateProduct;
 using InventorySys.Application.Features.Products.Commands.DeleteProduct;
 using InventorySys.Application.Features.Products.Commands.UpdateProduct;
@@ -39,6 +40,20 @@ public class ProductsController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateProductCommand command)
+    {
+        if (id != command.Id)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+
+    [HttpPut("{id:int}/adjust-stock-quantity")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(int id, [FromBody] AdjustStockQuantityCommand command)
     {
         if (id != command.Id)
             return BadRequest();
