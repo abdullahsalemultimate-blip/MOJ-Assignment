@@ -828,6 +828,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "reorderLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
           "unitsOnOrder": {
             "type": "integer",
             "format": "int32"
