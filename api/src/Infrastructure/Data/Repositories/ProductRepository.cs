@@ -43,6 +43,7 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
                 SupplierName = x.Supplier.Name,
                 UnitPrice = x.Product.UnitPrice,
                 UnitsInStock = x.Product.UnitsInStock,
+                ReorderLevel = x.Product.ReorderLevel,
                 UnitsOnOrder = x.Product.UnitsOnOrder
             })
             .PaginatedListAsync(pageNumber, pageSize, cancellationToken);
