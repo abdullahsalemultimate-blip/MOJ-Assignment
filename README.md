@@ -230,3 +230,46 @@ The project is structured following **Clean Architecture + Domain-Driven Design 
 
 ---
 
+# Front-end Quick Start & Application Summary (Vue 3)
+
+#### this project implemeted with (Vue 3/ PrimeVue/ Pinia store/ Routing with AuthGuard, Axios Global interceptors for Error Handling and JWT)
+
+## 1. Core Application Summary
+
+| Module | Purpose | Key Features |
+| :--- | :--- | :--- |
+| **Product Management** | CRUD operations for inventory items. | DataTable (Pagination, Sorting, Filtering), Create/Edit Modals. |
+| **Inventory Control** | Adjusting product stock levels. | Dedicated **Adjust Stock Dialog** (Increase/Decrease). |
+| **Audit Logging** | Traceability of product changes. | **Audit Log Modal** showing history (who/when/what). |
+| **Statistics Dashboard** | Key operational insights. | 3 Independent Cards: **Reorder Needed**, **Largest Supplier**, **Min Orders Product**. |
+
+---
+
+## 2. Running the Application
+
+This is a standard Vue 3/TypeScript project.
+
+| Step | Command |
+| :--- | :--- |
+| **1. Install** | `npm install` |
+| **2. Run Dev** | `npm run dev` |
+| **3. Access** | Open the local URL (`http://localhost:5173`). |
+
+---
+
+## 3. Configuration: Changing the API Base URL
+
+The backend URL is centrally managed in the Axios configuration file.
+
+### File to Edit
+
+`client/src/lib/axios.ts`
+
+### Modification
+
+In the `client/src/lib/axios.ts` file, locate and modify the `baseURL` property inside `axios.create()`:
+
+```typescript
+const BASE_URL = 'https://localhost:5001'
+
+```
