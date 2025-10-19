@@ -1,5 +1,3 @@
-using AutoMapper;
-using InventorySys.Application.Common.Interfaces;
 using InventorySys.Application.Common.Models;
 using InventorySys.Application.Features.Products;
 using InventorySys.Application.Features.Products.Dtos;
@@ -22,31 +20,30 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var query = from p in _context.Products join s in _context.Suppliers.IgnoreQueryFilters()
-            on p.SupplierId equals s.Id
-            where p.UnitsInStock.Value <= p.ReorderLevel.Value
-            select p;
-
+        var query = from p in _context.Products
+                    join s in _context.Suppliers.IgnoreQueryFilters()
+                    on p.SupplierId equals s.Id
+                    select new { Product = p, Supplier = s };
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             searchTerm = searchTerm.Trim();
-            query = query.Where(p => p.Name.Contains(searchTerm));
+            query = query.Where(x => x.Product.Name.Contains(searchTerm));
         }
 
         if (supplierId.HasValue && supplierId.Value > 0)
-            query = query.Where(p => p.SupplierId == supplierId.Value);
+            query = query.Where(x => x.Product.SupplierId == supplierId.Value);
 
         return await query
-            .OrderBy(p => p.Name)
-            .Select(x=> new ProductDto
+            .OrderBy(x => x.Product.Name)
+            .Select(x => new ProductDto
             {
-                Id = x.Id,
-                Name = x.Name,
+                Id = x.Product.Id,
+                Name = x.Product.Name,
                 SupplierName = x.Supplier.Name,
-                UnitPrice = x.UnitPrice,
-                UnitsInStock = x.UnitsInStock,
-                UnitsOnOrder = x.UnitsOnOrder
+                UnitPrice = x.Product.UnitPrice,
+                UnitsInStock = x.Product.UnitsInStock,
+                UnitsOnOrder = x.Product.UnitsOnOrder
             })
             .PaginatedListAsync(pageNumber, pageSize, cancellationToken);
     }
